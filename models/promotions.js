@@ -15,10 +15,12 @@ const promotionSchema = new Schema({
     },
     label: {
         type: String,
+        default: "",
         required: true
     },
     price: {
         type: Currency,
+        min: 0,
         required: true
     },
     featured: {

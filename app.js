@@ -13,9 +13,10 @@ const dishRouter = require('./routes/DishRouter')
 const promoRouter = require('./routes/PromoRouter')
 const leaderRouter = require('./routes/LeaderRouter')
 const mongoose = require('mongoose')
+const config = require("./config")
 
+const url = config.mongoUrl;
 
-const url = 'mongodb://localhost:27017/conFusion'
 const connect = mongoose.connect(url, {
   keepAlive: true,
   useNewUrlParser: true,
@@ -40,24 +41,14 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use(session({
-  name: "Nguyen",
-  secret: "Julia-Linda-Nguyen",
-  saveUninitialized: true,
-  resave: false,
-  store: new FileStore()
-}))
 app.use(passport.initialize());
-app.use(passport.session());
-
-
-
-
-app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use('/dishes', dishRouter.dishRouter);
 app.use('/dishes', dishRouter.dishRouterId);
 app.use('/promotions', promoRouter.promoRouter);
@@ -67,21 +58,6 @@ app.use('/leaders', leaderRouter.leaderRouterId);
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
-
-function auth (req, res, next) {
-    console.log(req.session);
-
-  if(!req.user) {
-      var err = new Error('You are not authenticated!');
-      err.status = 403;
-      return next(err);
-  }
-  else {
-      next();
-  }
-}
-app.use(auth)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

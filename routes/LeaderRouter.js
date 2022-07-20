@@ -1,11 +1,10 @@
-const bodyParser = require('body-parser')
-const express = require('express')
-const Leaders = require('../models/leaders')
-const leaderRouter = express()
-const leaderRouterId = express()
-const authenticate = require("../authenticate")
+var bodyParser = require('body-parser')
+var express = require('express')
+var Leaders = require('../models/leaders')
+var leaderRouter = express()
+var authenticate = require("../authenticate")
 leaderRouter.use(bodyParser.json())
-leaderRouterId.use(bodyParser.json())
+
 
 leaderRouter.route('/')
     .get((req,res,next) => {
@@ -40,7 +39,7 @@ leaderRouter.route('/')
             .catch(err => next(err))
     });
 
-leaderRouterId.route('/:leaderId')
+leaderRouter.route('/:leaderId')
     .get((req,res,next) => {
         Leaders.findById(req.params.leaderId)
             .then(leader => {
@@ -78,4 +77,4 @@ leaderRouterId.route('/:leaderId')
             .catch(err => next(err))
     })
 
-module.exports = {leaderRouter, leaderRouterId}
+module.exports = leaderRouter

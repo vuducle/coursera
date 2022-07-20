@@ -1,12 +1,10 @@
-const bodyParser = require('body-parser')
-const express = require('express')
-const Promotions = require('../models/promotions')
-const mongoose = require('mongoose');
-const promoRouter = express()
-const promoRouterId = express()
-const authenticate = require("../authenticate")
+var bodyParser = require('body-parser')
+var express = require('express')
+var Promotions = require('../models/promotions')
+var mongoose = require('mongoose');
+var promoRouter = express()
+var authenticate = require("../authenticate")
 promoRouter.use(bodyParser.json())
-promoRouterId.use(bodyParser.json())
 
 promoRouter.route('/')
     .get((req,res,next) => {
@@ -44,7 +42,7 @@ promoRouter.route('/')
             .catch(err => next(err))
     });
 
-promoRouterId.route('/:promoId')
+promoRouter.route('/:promoId')
     .get((req,res,next) => {
         Promotions.findById(req.params.promoId)
            .then(promo => {
@@ -82,4 +80,4 @@ promoRouterId.route('/:promoId')
             .catch(err => next(err))
     })
 
-module.exports = {promoRouter, promoRouterId}
+module.exports = promoRouter

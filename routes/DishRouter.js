@@ -3,7 +3,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var authenticate = require('../authenticate');
-
+const cors = require('./cors');
 var Dishes = require('../models/dishes');
 
 var dishRouter = express.Router();
@@ -11,7 +11,8 @@ var dishRouter = express.Router();
 dishRouter.use(bodyParser.json());
 
 dishRouter.route('/')
-    .get((req, res, next) => {
+    .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+    .get(cors.cors, (req, res, next) => {
         Dishes.find({}).populate('comments.author')
             .then((dishes) => {
                 res.statusCode = 200;
@@ -43,7 +44,8 @@ dishRouter.route('/')
     })
 
 dishRouter.route('/:dishId')
-    .get((req, res, next) => {
+    .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+    .get(cors.cors, (req, res, next) => {
         Dishes.findById(req.params.dishId).populate('comments.author').then((dishes) => {
             res.statusCode = 200;
             res.setHeader("Content-Type", "application/json");
@@ -77,7 +79,8 @@ dishRouter.route('/:dishId')
     });
 
 dishRouter.route('/:dishId/comments')
-    .get((req, res, next) => {
+    .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+    .get(cors.cors, (req, res, next) => {
         Dishes.findById(req.params.dishId).populate('comments.author').then((dish) => {
             if (dish != null) {
                 res.statusCode = 200;
@@ -135,7 +138,8 @@ dishRouter.route('/:dishId/comments')
     })
 
 dishRouter.route('/:dishId/comments/:commentId')
-    .get((req, res, next) => {
+    .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
+    .get(cors.cors, (req, res, next) => {
         Dishes.findById(req.params.dishId).populate('comments.author').then((dish) => {
             if (dish != null && dish.comments.id(req.params.commentId)) {
                 res.statusCode = 200;

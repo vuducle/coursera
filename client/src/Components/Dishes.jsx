@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Container, SimpleGrid, Box} from "@chakra-ui/react"
+import {Container, SimpleGrid, Box, Text, Heading} from "@chakra-ui/react"
 
 export default function Dishes() {
   const [dishes, setDishes] = useState([])
@@ -19,7 +19,7 @@ export default function Dishes() {
 
   return (
     <div>
-      <Container>
+      <Container maxW="1620px">
         {loading ? (
         <p>Loading ...</p>
       ) : (
@@ -27,17 +27,21 @@ export default function Dishes() {
           {dishes.map(item => (
             <React.Fragment>
               <Box key={item._id}>
-                <span>
-                  {item.name}
-                </span>
-                <img src={path + item.image} alt="" />
-                <span>
-                  {item.description}
+                <Box bgColor="green.500">
+                  <Heading as="h4">
+
+                    {item.name}
+                  </Heading>
                   
-                </span>
-                <span>
-                  {item.price} €
-                </span>
+                  <img src={path + item.image} alt="" />
+                  <Text as="i">
+                    {item.description}
+                  </Text>
+                  <span className='item-d'>
+                    {item.price} €
+                  </span>
+                </Box>
+               
                 <div>
                   {
                     item.comments.map((comment, i) => {
@@ -46,7 +50,7 @@ export default function Dishes() {
                           <div className="comment-avater">
                             {comment.author.lastname}, {comment.author.firstname}
                           </div>
-                          <div>
+                          <div className='item-d'>
                             {comment.comment}
                           </div>
                           <div className="rating">

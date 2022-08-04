@@ -18,18 +18,20 @@ import React, {useState, useEffect} from 'react'
 import { useNavigate  } from "react-router-dom"
 function Login() {
     const {
-        isOpen, onOpen, onClose
+        isOpen, onOpen, onClose, getDisclosureProps
     } = useDisclosure();
     const initialRef = React.useRef(null)
     const [show, setShow] = React.useState(false)
     const exec = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    
+    const discloseProps = getDisclosureProps();
     useEffect(() => {
         if (localStorage.getItem("user-token")) {
             exec("/")
         }
+        console.log(discloseProps);
+        document.title = username
     }, [])
 
     const onLogin = async (e) => {
@@ -58,12 +60,12 @@ function Login() {
     const setPasswordFunction = (e) => {
         setPassword(e.target.value)
     }
-
+   
     return (
         <>
             <Button onClick={onOpen}>Login</Button>
 
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Modal {...discloseProps} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Modal Title</ModalHeader>

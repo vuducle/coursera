@@ -1,10 +1,17 @@
 
 import {Button, Container, Form, Nav, Navbar, NavDropdown} from "react-bootstrap";
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css"
-import { Link } from "react-router-dom";
+import {  
+    Routes,
+    Route,
+    Link,
+    useNavigate,
+    useLocation,
+    Navigate,
+    Outlet } from "react-router-dom";
 import gigaChad from "../gigachad.png"
 import Login from "./Login";
-
+import Dashboard from "./Dashboard";
 
 function Navigation() {
     let gigaStyles = {
@@ -32,6 +39,11 @@ function Navigation() {
                             <Nav.Link>
                                 <Link to="/promotions">
                                     Promotions
+                                </Link>
+                            </Nav.Link>
+                            <Nav.Link>
+                                <Link to="/dashboard">
+                                    Dashboard
                                 </Link>
                             </Nav.Link>
                         </Nav>

@@ -15,23 +15,30 @@ import {
 } from '@chakra-ui/react'
 
 import React, {useState, useEffect} from 'react'
-import { useNavigate  } from "react-router-dom"
+import { useNavigate, useLocation  } from "react-router-dom"
 function Login() {
     const {
         isOpen, onOpen, onClose, getDisclosureProps
     } = useDisclosure();
     const initialRef = React.useRef(null)
     const [show, setShow] = React.useState(false)
-    const exec = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const discloseProps = getDisclosureProps();
+    
+    let navigate = useNavigate(),
+        location = useLocation(),
+        from = location.state?.from?.pathname || "/";
+
     useEffect(() => {
         if (localStorage.getItem("user-token")) {
-            exec("/")
+            navigate(from, {replace: true})   
         }
-        console.log(discloseProps);
-        document.title = username
+        // console.log(discloseProps);
+        // document.title = username
+       
+            
+        
     }, [])
 
     const onLogin = async (e) => {
@@ -52,7 +59,7 @@ function Login() {
         response = await response.json();
         localStorage.setItem("user-token", JSON.stringify(response))
 
-        exec("/")
+        
     }
     const setUsernameFunction = (e) => {
         setUsername(e.target.value)

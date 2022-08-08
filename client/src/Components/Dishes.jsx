@@ -13,7 +13,7 @@ export default function Dishes() {
     const respose = await fetch("https:localhost:3443/dishes")
     const dishesR = await respose.json()
     setDishes(dishesR)
-    // console.log(dishesR);
+    console.log(dishesR);
     setLoading(false)
   }
 

@@ -26,30 +26,18 @@ function Navigation() {
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll" />
                     <Navbar.Collapse id="navbarScroll">
-                        <Nav
-                            className="me-auto my-2 my-lg-0"
-                            style={{ maxHeight: '100px' }}
-                            navbarScroll
-                        >
+                        <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
                             <Nav.Link>
-                                <Link to="/dishes">
-                                    Dishes
-                                </Link>
+                                <Link to="/">Home</Link>
                             </Nav.Link>
                             <Nav.Link>
-                                <Link to="/promotions">
-                                    Promotions
-                                </Link>
+                                <Link to="/promotions">Promotions</Link>
                             </Nav.Link>
                             <Nav.Link>
-                                <Link to="/dashboard">
-                                    Dashboard
-                                </Link>
+                                <Link to="/dashboard">Dashboard</Link>
                             </Nav.Link>
                         </Nav>
-                        <Login>
-
-                        </Login>
+                        <Login />
                     </Navbar.Collapse>
             </Container>
         </Navbar>

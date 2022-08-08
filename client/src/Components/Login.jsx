@@ -28,17 +28,10 @@ function Login() {
     
     let navigate = useNavigate(),
         location = useLocation(),
-        from = location.state?.from?.pathname || "/";
+        from = location.state?.from?.pathname || "/dashboard";
 
     useEffect(() => {
-        if (localStorage.getItem("user-token")) {
-            navigate(from, {replace: true})   
-        }
-        // console.log(discloseProps);
-        // document.title = username
-       
-            
-        
+
     }, [])
 
     const onLogin = async (e) => {
@@ -57,8 +50,11 @@ function Login() {
         });
 
         response = await response.json();
-        localStorage.setItem("user-token", JSON.stringify(response))
-
+        sessionStorage.setItem("user-token", JSON.stringify(response))
+        if (response) {
+            onClose()
+            navigate(from, {replace: true})   
+        }
         
     }
     const setUsernameFunction = (e) => {

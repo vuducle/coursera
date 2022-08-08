@@ -44,3 +44,10 @@ img {
 .item-d {
   display: block;
 }
+.rating {
+  display: flex;
+  align-items: center;
+}
+.bi-star {
+  fill: #a63eda;
+}

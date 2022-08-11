@@ -6,13 +6,18 @@ import Authentification from './utils/Authentification';
 import { Routes, Route, Link, Router } from 'react-router-dom';
 import Navigation from './Components/Navigation';
 import { ChakraProvider } from '@chakra-ui/react'
+import { useSelector } from 'react-redux';
 
 const AppRoute = () => {
+  const linda = useSelector((state) => state.appState.auth);
+  console.log(linda)
   return (
     <Routes>
       {/* <Route element={<Authentification/>}> */}
         <Route index path="/"  element={<Dishes />} />
-        <Route path="dashboard"  element={<Dashboard />} />
+        {
+          linda && <Route path="dashboard"  element={<Dashboard />} />
+        }
       {/* </Route> */}
 
        

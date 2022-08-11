@@ -13,6 +13,10 @@ import gigaChad from "../gigachad.png"
 import Login from "./Login";
 import Dashboard from "./Dashboard";
 
+const Logout = () => {
+    
+}
+
 function Navigation() {
     let gigaStyles = {
         height: "50px",

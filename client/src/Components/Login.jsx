@@ -15,7 +15,9 @@ import {
 } from '@chakra-ui/react'
 
 import React, {useState, useEffect} from 'react'
+import { useDispatch } from 'react-redux';
 import { useNavigate, useLocation  } from "react-router-dom"
+import { authenticate } from '../redux/actions';
 function Login() {
     const {
         isOpen, onOpen, onClose, getDisclosureProps
@@ -25,6 +27,7 @@ function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const discloseProps = getDisclosureProps();
+    const dispatch = useDispatch();
     
     let navigate = useNavigate(),
         location = useLocation(),
@@ -52,6 +55,7 @@ function Login() {
         response = await response.json();
         sessionStorage.setItem("user-token", JSON.stringify(response))
         if (response) {
+            dispatch(authenticate())
             onClose()
             navigate(from, {replace: true})   
         }

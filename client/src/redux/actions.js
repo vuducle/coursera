@@ -23,10 +23,13 @@ export const appSlice = createSlice({
     authenticate: (state) => {
       state.auth = true;
     },
+    onLogout: (state) => {
+      state.auth = false;
+    }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { authenticate } = appSlice.actions
+export const { authenticate, onLogout } = appSlice.actions
 
 export default appSlice.reducer

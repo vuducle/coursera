@@ -18,6 +18,8 @@ import React, {useState, useEffect} from 'react'
 import { useDispatch } from 'react-redux';
 import { useNavigate, useLocation  } from "react-router-dom"
 import { authenticate } from '../redux/actions';
+import { useCookies } from 'react-cookie';
+
 function Login() {
     const {
         isOpen, onOpen, onClose, getDisclosureProps
@@ -33,9 +35,7 @@ function Login() {
         location = useLocation(),
         from = location.state?.from?.pathname || "/dashboard";
 
-    useEffect(() => {
-
-    }, [])
+    const [cookies, setCookie] = useCookies(['gigachad'])
 
     const onLogin = async (e) => {
         let values = {
@@ -54,6 +54,10 @@ function Login() {
 
         response = await response.json();
         sessionStorage.setItem("user-token", JSON.stringify(response))
+        setCookie('gigachad', JSON.stringify(response), {
+            path: '/',
+            maxAge: 60 * 60
+        })
         if (response) {
             dispatch(authenticate())
             onClose()

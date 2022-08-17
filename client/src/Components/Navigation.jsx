@@ -12,12 +12,16 @@ import {
 import gigaChad from "../gigachad.png"
 import Login from "./Login";
 import Dashboard from "./Dashboard";
-
-const Logout = () => {
-    
-}
+import { useSelector } from 'react-redux';
+import Logout from "./Logout";
+import { useCookies } from 'react-cookie';
 
 function Navigation() {
+    const linda = useSelector((state) => state.appState.auth);
+    const [cookies] = useCookies(['gigachad'])
+    if (cookies.gigachad !== undefined) {
+        let giga = cookies.gigachad
+    }
     let gigaStyles = {
         height: "50px",
         width: "50px"
@@ -41,7 +45,8 @@ function Navigation() {
                                 <Link to="/dashboard">Dashboard</Link>
                             </Nav.Link>
                         </Nav>
-                        <Login />
+                        {cookies.gigachad && linda ? <Logout /> : <Login />}
+                        {/* <Login /> */}
                     </Navbar.Collapse>
             </Container>
         </Navbar>

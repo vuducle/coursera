@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import Dishes from "./Components/Dishes";
 import Dashboard from "./Components/Dashboard";
+import Register from "./Components/Register";
 import Authentification from './utils/Authentification';
 import { Routes, Route, Link, Router } from 'react-router-dom';
 import Navigation from './Components/Navigation';
@@ -19,7 +20,7 @@ const AppRoute = () => {
           linda && <Route path="dashboard"  element={<Dashboard />} />
         }
       {/* </Route> */}
-
+        <Route path="register" element={<Register />}/>
        
    
     </Routes>

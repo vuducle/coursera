@@ -7,10 +7,10 @@ import Dashboard from './Dashboard';
 export default function Dishes() {
   const [dishes, setDishes] = useState([])
   const [loading, setLoading] = useState(false)
-  const path = "https:localhost:3443/"
+  const path = "https://localhost:3443/"
   async function getDishes() {
     setLoading(true)
-    const respose = await fetch("https:localhost:3443/dishes")
+    const respose = await fetch("https://localhost:3443/dishes")
     const dishesR = await respose.json()
     setDishes(dishesR)
     console.log(dishesR);

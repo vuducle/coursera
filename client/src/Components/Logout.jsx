@@ -11,12 +11,13 @@ function Logout() {
     const [cookies, removeCookie] = useCookies(['gigachad'])
     const cookiesU = new Cookies();
     const dispatch = useDispatch();
+
     let navigate = useNavigate(),
         location = useLocation(),
         from = location.state?.from?.pathname || "/";
 
 
-    const onLogout = async () => {
+    const handleLogout = async () => {
         let response = await fetch("https://localhost:3443/users/logout", 
         {
             method: "GET",
@@ -25,7 +26,7 @@ function Logout() {
             }
         })
         if (response) {
-            dispatch(authenticate())
+            dispatch(onLogout())
             cookiesU.remove("gigachad", {path: "/"})
             navigate(from, {replace: true})
             window.location.reload()   
@@ -35,7 +36,7 @@ function Logout() {
     
     return (
         <div>
-            <Button variant="light" onClick={onLogout}>
+            <Button variant="light" onClick={handleLogout}>
                 Logout
             </Button>
         </div>

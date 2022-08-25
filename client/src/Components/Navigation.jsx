@@ -45,9 +45,10 @@ function Navigation() {
                             </Nav.Link>
                         </Nav>
                         <Link to="/register">
-                            <Button variant="light" className="signUp">
+                            {cookies.gigachad ? <></>: <Button variant="light" className="signUp">
                                 Register
-                            </Button>
+                            </Button>}
+                            
                         </Link>
                         {cookies.gigachad && linda ? <Logout /> : <Login />}
                         {/* <Login /> */}

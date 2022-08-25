@@ -13,10 +13,11 @@ function Register() {
 
     const USER_REGEX = /^\[A-z\][A-z0-9-_]{3,23}$/;
     const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+
     const userRef = useRef();
     const errRef = useRef();
-    const [firstName, setFirstname] = useState("");
-    const [lastName, setLastName] = useState("");
+    const [firstname, setFirstname] = useState("");
+    const [lastname, setLastName] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -64,10 +65,10 @@ function Register() {
         //     setErrMsg("Invalid Entry");
         //     return;
         // }
-
+        
         let values = {
-            firstName,
-            lastName,
+            firstname,
+            lastname,
             username,
             password
         }
@@ -80,33 +81,31 @@ function Register() {
                 },
                 // credentials: "include",
                 body: JSON.stringify(values)
+            }).then(res => {
+                
+                if(res.status === 500) {
+                    setErrMsg("Username Taken");
+                } 
+                if (res.status === 200) {
+                     dispatch(authenticate())
+                    navigate(from, {replace: true}) 
+                    setSuccess(true);
+                    setUsername("");
+                    setFirstname("");
+                    setLastName("");
+                    setPassword("");
+                    setMatchPwd("");
+
+                }
             })
             response = await response.json();
             setCookie('gigachad', JSON.stringify(response), {
                 path: '/',
                 maxAge: 60 * 60
             })
-
-             if (response) {
-                dispatch(authenticate())
-                navigate(from, {replace: true})   
-                console.log(firstName);
-                console.log(lastName);
-                setSuccess(true);
-                setUsername("");
-                setFirstname("");
-                setLastName("");
-                setPassword("");
-                setMatchPwd("");
-            }
+            console.log(response);
         } catch (error) {
-            if (!error?.response) {
-                setErrMsg("No Server Response");
-            } else if (error.response?.status === 409) {
-                setErrMsg("Username Taken");
-            } else {
-                setErrMsg("Registration Failed");
-            }
+            console.log(error);
             errRef.current.focus();
         }
     }
@@ -123,7 +122,7 @@ function Register() {
                         <Form.Group className="mb-3" controlId="firstname">
                             <Form.Label>First name</Form.Label>
                             <Form.Control onChange={(e) => setFirstname(e.target.value)} 
-                            value={firstName}
+                            value={firstname}
                             type="input" placeholder="Enter Fistname" />
                         </Form.Group>
                     </Col>
@@ -132,7 +131,7 @@ function Register() {
                             <Form.Label>Last name</Form.Label>
                             <Form.Control 
                             onChange={(e) => setLastName(e.target.value)}
-                            value={lastName}
+                            value={lastname}
                             type="input" placeholder="Enter Lastname" />
                         </Form.Group>
                     </Col>
@@ -140,7 +139,7 @@ function Register() {
 
                 <Form.Group className="mb-3" controlId="username">
                     <Form.Label>Username
-                        <FontAwesomeIcon
+                        {/* <FontAwesomeIcon
                         icon={faCheck}
                         className={validName ? "valid" : "hide"}
                         />
@@ -149,11 +148,10 @@ function Register() {
                         className={
                             validName || !username ? "hide" : "invalid"
                         }
-                        />
+                        /> */}
                     </Form.Label>
                     <Form.Control 
                         type="text" 
-                       
                         ref={userRef}
                         autoComplete="off"
                         onChange={(e) => setUsername(e.target.value)} 
@@ -164,9 +162,6 @@ function Register() {
                         onFocus={() => setUserFocus(true)}
                         onBlur={() => setUserFocus(false)}
                         placeholder="Enter username" />
-                    <Form.Text className="text-muted">
-                    We'll never share your informations with anyone else.
-                    </Form.Text>
                      <p
                         id="uidnote"
                         className={

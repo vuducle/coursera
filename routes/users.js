@@ -14,13 +14,14 @@ router.post('/signup', cors.corsWithOptions, (req, res, next) => {
       res.statusCode = 500;
       res.setHeader('Content-Type', 'application/json');
       res.json({err: err});
+      console.log(req.body)
     }
     else {
       if (req.body.firstname)
         user.firstname = req.body.firstname;
       if (req.body.lastname)
         user.lastname = req.body.lastname;
-
+      console.log(req.body)
       user.save((err, user) => {
         if (err) {
           res.statusCode = 500;

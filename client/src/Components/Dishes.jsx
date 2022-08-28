@@ -7,6 +7,8 @@ import Dashboard from './Dashboard';
 export default function Dishes() {
   const [dishes, setDishes] = useState([])
   const [loading, setLoading] = useState(false)
+  const [likes, setLikes] = useState([])
+
   const path = "https://localhost:3443/"
   async function getDishes() {
     setLoading(true)
@@ -17,6 +19,12 @@ export default function Dishes() {
     setLoading(false)
   }
 
+  const getFavorites = async () => {
+    let response = await fetch("https://localhost:3443/favorites")
+    response = await response.json()
+    setLikes(response)
+    console.log(response);
+  }
   function printStars(comment) {
       const arr = new Array(comment.rating).fill(0);
       // console.log(arr);
@@ -29,6 +37,7 @@ export default function Dishes() {
 
   useEffect(() => {
     getDishes()
+    getFavorites()
   }, [])
 
   return (

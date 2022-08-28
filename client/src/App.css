@@ -92,3 +92,6 @@ img {
 .line {
   display: inline-block;
 }
+.modal-dialog {
+  max-width: 900px !important;
+}

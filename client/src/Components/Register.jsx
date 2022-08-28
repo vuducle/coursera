@@ -39,7 +39,7 @@ function Register() {
     
     let navigate = useNavigate(),
         location = useLocation(),
-        from = location.state?.from?.pathname || "/dashboard";
+        from = location.state?.from?.pathname || "/";
 
 
     // State events
@@ -72,42 +72,32 @@ function Register() {
             username,
             password
         }
-        try {
-            let response = await fetch("https:localhost:3443/users/signup", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                // credentials: "include",
-                body: JSON.stringify(values)
-            }).then(res => {
-                
-                if(res.status === 500) {
-                    setErrMsg("Username Taken");
-                } 
-                if (res.status === 200) {
-                     dispatch(authenticate())
-                    navigate(from, {replace: true}) 
-                    setSuccess(true);
-                    setUsername("");
-                    setFirstname("");
-                    setLastName("");
-                    setPassword("");
-                    setMatchPwd("");
-
-                }
-            })
-            response = await response.json();
-            setCookie('gigachad', JSON.stringify(response), {
-                path: '/',
-                maxAge: 60 * 60
-            })
-            console.log(response);
-        } catch (error) {
-            console.log(error);
-            errRef.current.focus();
+       
+        let response = await fetch("https:localhost:3443/users/signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            // credentials: "include",
+            body: JSON.stringify(values)
+        })
+       
+        if (response.status === 500) {
+            setErrMsg("Username taken")
         }
+        if (response.status === 200) {
+            // setCookie('gigachad', JSON.stringify(response), {
+            //     path: '/',
+            //     maxAge: 60 * 60
+            // })
+            dispatch(authenticate())
+            navigate(from, {replace: true}) 
+            setSuccess(true);
+        }
+        
+        errRef.current.focus();
+        
     }
 //     disabled={
 //     !validName || !validPwd || !validMatch

@@ -5,7 +5,6 @@ var mongoose = require('mongoose');
 var authenticate = require('../authenticate');
 const cors = require('./cors');
 var Dishes = require('../models/dishes');
-
 var dishRouter = express.Router();
 
 dishRouter.use(bodyParser.json());
@@ -27,14 +26,13 @@ dishRouter.route('/')
             res.setHeader("Content-Type", "application/json");
             res.json(dish);
             console.log("Dish Created");
-        }, (err) => next(err)).catch((err) => next(err));
+        }, (err) => next(err)).catch((err) => next(err));s
     })
 
     .put(cors.corsWithOptions,authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         res.statusCode = 403;
         res.end('PUT operation is not supported on /dishes');
     })
-
     .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         Dishes.remove({}).then((result) => {
             res.statusCode = 200;

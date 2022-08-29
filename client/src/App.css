@@ -95,3 +95,9 @@ img {
 .modal-dialog {
   max-width: 900px !important;
 }
+
+.playerProfilePic_home_tile {
+  height: 300px;
+  object-fit: cover;
+  width: 300px;
+}

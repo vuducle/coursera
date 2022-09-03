@@ -44,16 +44,6 @@ function PostDish() {
     // };
     
     const addPost = async (e) => {
-        let values = {
-            name,
-            image: image.data.name,
-            label,
-            category,
-            description,
-            price: parseInt(price)
-            
-        }
-
         const formData = new FormData();
         formData.append("image", image.data)
         formData.append("name", name)
@@ -64,23 +54,16 @@ function PostDish() {
 
         try {
             let response = await fetch("https://localhost:3443/dishes", {
-                body: JSON.stringify(values),
+                body: formData,
                 method: "POST",
+                // redirect: 'follow',
                 headers: {
-                    "Content-Type": "multipart/form-data",
+                    // "Content-Type": "multipart/form-data",
                     "Authorization": "Bearer " + cookies.gigachad.token,
                 }
             })
             if (response.status === 500) {
                 setErrMsg("Server crashed")
-                console.log(formData.getAll("image"))
-                console.log(formData.getAll("name"))
-                console.log(formData.getAll("label"))
-                console.log(formData.getAll("description"))
-                console.log(formData.getAll("category"))
-                console.log(formData.getAll("price"))
-                console.log(response)
-                console.log(values)
             }
             if (response.status === 201) {
                 setErrMsg("Dish added")

@@ -7,15 +7,16 @@ const cors = require('./cors');
 var Dishes = require('../models/dishes');
 var dishRouter = express.Router();
 let multer = require("multer");
-    const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require('uuid');
+const path = require("path")
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "/public/images")
+        cb(null, "public/images")
     },
     filename: (req, file,cb) => {
         const fileName = file.originalname.toLowerCase().split(' ').join('-');
-        cb(null, uuidv4() + '-' + fileName)
+        cb(null,fileName)
     }
 })
 
@@ -44,16 +45,30 @@ dishRouter.route('/')
             }, (err) => next(err)).catch((err) => next(err));
     })
 
-    .post(cors.corsWithOptions,authenticate.verifyUser, authenticate.verifyAdmin, upload.single("image"), (req, res, next) => {
-        Dishes.create(req.body).then((dish) => {
-            res.statusCode = 201;
-            res.setHeader("Content-Type", "application/json");
-            res.json(dish);
-            console.log("Dish Created");
-            console.log(req.body)
-            
-        }, (err) => next(err)).catch((err) => next(err));
-        
+    .post(cors.corsWithOptions,authenticate.verifyUser, authenticate.verifyAdmin, upload.single("image"), async(req, res, next) => {
+        try {
+            const dish = new Dishes();
+            const {
+                category,
+                description,
+                name,
+                price,
+                label,
+                image,
+            } = req.body;
+
+            dish.category = category;
+            dish.description = description;
+            dish.image = image;
+            dish.name = name;
+            dish.price = price;
+
+            const doc = await dish.save();
+            res.status(201).send(doc);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send(err);
+        }
     })
 
     .put(cors.corsWithOptions,authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {

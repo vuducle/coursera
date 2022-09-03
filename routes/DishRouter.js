@@ -6,6 +6,30 @@ var authenticate = require('../authenticate');
 const cors = require('./cors');
 var Dishes = require('../models/dishes');
 var dishRouter = express.Router();
+let multer = require("multer");
+    const { v4: uuidv4 } = require('uuid');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "/public/images")
+    },
+    filename: (req, file,cb) => {
+        const fileName = file.originalname.toLowerCase().split(' ').join('-');
+        cb(null, uuidv4() + '-' + fileName)
+    }
+})
+
+let upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
+            cb(null, true);
+        } else {
+            cb(null, false);
+            return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+        }
+    }
+});
 
 dishRouter.use(bodyParser.json());
 
@@ -20,13 +44,16 @@ dishRouter.route('/')
             }, (err) => next(err)).catch((err) => next(err));
     })
 
-    .post(cors.corsWithOptions,authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+    .post(cors.corsWithOptions,authenticate.verifyUser, authenticate.verifyAdmin, upload.single("image"), (req, res, next) => {
         Dishes.create(req.body).then((dish) => {
             res.statusCode = 201;
             res.setHeader("Content-Type", "application/json");
             res.json(dish);
             console.log("Dish Created");
-        }, (err) => next(err)).catch((err) => next(err));s
+            console.log(req.body)
+            
+        }, (err) => next(err)).catch((err) => next(err));
+        
     })
 
     .put(cors.corsWithOptions,authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {

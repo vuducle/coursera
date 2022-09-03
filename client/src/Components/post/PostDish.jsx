@@ -17,57 +17,86 @@ function PostDish() {
     const [category, setCategory] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
-    const [image, setPicture] = useState(null);
-    const [imgData, setImgData] = useState(null);
+    // const [image, setPicture] = useState(null);
+    // const [imgData, setImgData] = useState(null);
     const [featured, setFeatured] = useState(false);
+    let [image, setImage] = useState({ preview: '', data: '' })
+    const [status, setStatus] = useState('')
 
     const [errMsg, setErrMsg] = useState("");
-
-    const onChangePicture = e => {
-        if (e.target.files[0]) {
-        console.log("picture: ", e.target.files);
-        setPicture(e.target.files[0]);
-        const reader = new FileReader();
-        reader.addEventListener("load", () => {
-            setImgData(reader.result);
-        });
-        reader.readAsDataURL(e.target.files[0]);
+    const handleFileChange = (e) => {
+        const img = {
+        preview: URL.createObjectURL(e.target.files[0]),
+        data: e.target.files[0],
         }
-    };
+        setImage(img)
+    }
+    // const onChangePicture = e => {
+    //     if (e.target.files[0]) {
+    //     console.log("picture: ", e.target.files[0].name);
+    //     setPicture(e.target.files[0]);
+    //     const reader = new FileReader();
+    //     reader.addEventListener("load", () => {
+    //         setImgData(reader.result);
+    //     });
+    //     reader.readAsDataURL(e.target.files[0]);
+    //     }
+    // };
     
-
-    const addPost = async () => {
+    const addPost = async (e) => {
         let values = {
             name,
+            image: image.data.name,
             label,
             category,
             description,
-            price,
-            image
+            price: parseInt(price)
+            
         }
 
-        let response = await fetch("https://localhost:3443/dishes", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer" + cookies.gigachad.token
-            },
-            // credentials: "include",
-            body: JSON.stringify(values)
-        })
-        if (response.status === 500) {
-            setErrMsg("Dish already taken")
-        }
-        if (response.status === 200) {
-            setErrMsg("Dish added")
-        }
+        const formData = new FormData();
+        formData.append("image", image.data)
+        formData.append("name", name)
+        formData.append("label", label)
+        formData.append("category", category)
+        formData.append("description", description)
+        formData.append("price", parseInt(price))
 
-        if (response.status === 401) {
-            setErrMsg("You are not authorized")
-            console.log(values);
-        }
+        try {
+            let response = await fetch("https://localhost:3443/dishes", {
+                body: JSON.stringify(values),
+                method: "POST",
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    "Authorization": "Bearer " + cookies.gigachad.token,
+                }
+            })
+            if (response.status === 500) {
+                setErrMsg("Server crashed")
+                console.log(formData.getAll("image"))
+                console.log(formData.getAll("name"))
+                console.log(formData.getAll("label"))
+                console.log(formData.getAll("description"))
+                console.log(formData.getAll("category"))
+                console.log(formData.getAll("price"))
+                console.log(response)
+                console.log(values)
+            }
+            if (response.status === 201) {
+                setErrMsg("Dish added")
+            }
 
-        errRef.current.focus();
+            if (response.status === 401) {
+                setErrMsg("You are not authorized")
+                console.log(formData);
+            }
+
+            errRef.current.focus();
+
+        } catch (error) {
+            console.log(error);
+        }
+        
     }
 
     return (
@@ -110,14 +139,13 @@ function PostDish() {
                     <Form.Control type="number" placeholder="Price in €, for decimals use '.'" value={price} onChange={e => setPrice(e.target.value)}/>
                 </Form.Group>
 
-                <div className="previewProfilePic">
-                    <img className="playerProfilePic_home_tile" src={imgData} />
-                </div>
+                {image.preview && <img src={image.preview} width='100' height='100' className="playerProfilePic_home_tile" />}
+
                 <Form.Group controlId="formFile" className="mb-3">
                     <Form.Label>Upload image</Form.Label>
-                    <Form.Control type="file" onChange={onChangePicture} />
+                    <Form.Control type="file" name='image' onChange={handleFileChange}/>
                 </Form.Group>
-
+                {status && <h4>{status}</h4>}
                 <Form.Check 
                     type="switch"
                     id="featured"

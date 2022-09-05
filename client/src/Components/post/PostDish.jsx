@@ -42,7 +42,9 @@ function PostDish() {
     //     reader.readAsDataURL(e.target.files[0]);
     //     }
     // };
-    
+    const handleChange = async () => {
+        await setFeatured(!featured)
+    }
     const addPost = async (e) => {
         const formData = new FormData();
         formData.append("image", image.data)
@@ -51,7 +53,7 @@ function PostDish() {
         formData.append("category", category)
         formData.append("description", description)
         formData.append("price", parseInt(price))
-
+        formData.append("featured", featured)
         try {
             let response = await fetch("https://localhost:3443/dishes", {
                 body: formData,
@@ -64,6 +66,8 @@ function PostDish() {
             })
             if (response.status === 500) {
                 setErrMsg("Server crashed")
+                console.log(featured)
+                
             }
             if (response.status === 201) {
                 setErrMsg("Dish added")
@@ -81,6 +85,7 @@ function PostDish() {
         }
         
     }
+
 
     return (
         <>
@@ -119,7 +124,7 @@ function PostDish() {
 
                 <Form.Group className="mb-3" controlId="price">
                     <Form.Label>Price of dish</Form.Label>
-                    <Form.Control type="number" placeholder="Price in €, for decimals use '.'" value={price} onChange={e => setPrice(e.target.value)}/>
+                    <Form.Control step="any" type="number" placeholder="Price in €, for decimals use '.'" value={price} onChange={e => setPrice(e.target.value)}/>
                 </Form.Group>
 
                 {image.preview && <img src={image.preview} width='100' height='100' className="playerProfilePic_home_tile" />}
@@ -134,8 +139,8 @@ function PostDish() {
                     id="featured"
                     label="Should it be featured?"
                     className='mb-3'
-                    value={featured}
-                    onChange={setFeatured}
+                    checked={featured}
+                    onChange={handleChange}
                 />
                 <Button colorScheme='blue' type="submit" onClick={addPost}
                 >

@@ -9,6 +9,7 @@ var dishRouter = express.Router();
 let multer = require("multer");
 const { v4: uuidv4 } = require('uuid');
 const path = require("path")
+const fs = require("fs")
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -54,14 +55,17 @@ dishRouter.route('/')
                 name,
                 price,
                 label,
-                image,
+                featured
             } = req.body;
-
+            
             dish.category = category;
             dish.description = description;
-            dish.image = image;
+            dish.image = req.file.path
             dish.name = name;
             dish.price = price;
+            dish.label = label;
+            dish.featured = featured;
+            dish.user = req.user.username;
 
             const doc = await dish.save();
             res.status(201).send(doc);
@@ -75,12 +79,24 @@ dishRouter.route('/')
         res.statusCode = 403;
         res.end('PUT operation is not supported on /dishes');
     })
-    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
-        Dishes.remove({}).then((result) => {
-            res.statusCode = 200;
-            res.setHeader("Content-Type", "application/json");
-            res.json(result);
-        }, (err) => next(err)).catch((err) => next(err));
+    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, async (req, res, next) => {
+        console.log(req)
+        console.log(res)
+        try {
+            const dish = new Dishes();
+            console.log(dish)
+            fs.unlink(req.file.path, (err => {
+                if (err) console.log(err);
+            }));
+            console.log(dish)
+            const doc = await dish.remove({})
+            console.log(dish)
+            res.status(200).send(doc)
+            console.log(dish)
+        } catch (err) {
+            console.log(err);
+            res.status(500).send(err)
+        }
     })
 
 dishRouter.route('/:dishId')
@@ -110,12 +126,15 @@ dishRouter.route('/:dishId')
         }, (err) => next(err)).catch((err) => next(err));
     })
 
-    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
+    .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin,  async (req, res, next) => {
         Dishes.findByIdAndRemove(req.params.dishId).then((result) => {
             res.statusCode = 200;
+            console.log(req)
             res.setHeader("Content-Type", "application/json");
             res.json(result);
         }, (err) => next(err)).catch((err) => next(err));
+      
+
     });
 
 dishRouter.route('/:dishId/comments')

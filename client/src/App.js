@@ -7,11 +7,15 @@ import Authentification from './utils/Authentification';
 import { Routes, Route, Link, Router } from 'react-router-dom';
 import Navigation from './Components/Navigation';
 import { ChakraProvider } from '@chakra-ui/react'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useCookies } from "react-cookie";
+import { resetLoginState } from './redux/actions';
+
 
 const AppRoute = () => {
   const linda = useSelector((state) => state.appState.auth);
   console.log(linda)
+  
   return (
     <Routes>
       {/* <Route element={<Authentification/>}> */}
@@ -28,11 +32,12 @@ const AppRoute = () => {
 };
 
 function App() {
+  const [cookies] = useCookies(['gigachad']);
+  const dispatch = useDispatch();
     return (
       
         <ChakraProvider>
           <div className='LindaApp'>
-        
           <Navigation />
 
            <AppRoute />

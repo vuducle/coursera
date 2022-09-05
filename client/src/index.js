@@ -14,7 +14,9 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { CookiesProvider } from 'react-cookie';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
+  
   <React.StrictMode>
       <Provider
         store={store}
@@ -22,6 +24,7 @@ root.render(
         <PersistGate loading={null} persistor={persistor}>
           <CookiesProvider>
             <BrowserRouter>
+            
              <App />
             </BrowserRouter>
           </CookiesProvider>
